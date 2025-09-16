@@ -5,5 +5,7 @@ var express_1 = require("express");
 var videoHandlers_1 = require("./handlers/videoHandlers");
 exports.VideoRouter = (0, express_1.Router)();
 exports.VideoRouter.post('/', videoHandlers_1.createVideoHandler);
+exports.VideoRouter.get('/create', videoHandlers_1.createVideoHandler);
 exports.VideoRouter.get('/:id', videoHandlers_1.getVideoByIdHandler);
+exports.VideoRouter.get('/', videoHandlers_1.getVideos);
 //# sourceMappingURL=VideoRouter.js.map

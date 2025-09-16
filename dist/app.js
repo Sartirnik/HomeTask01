@@ -8,8 +8,8 @@ var express_1 = __importDefault(require("express"));
 var VideoRouter_1 = require("./video/VideoRouter");
 exports.app = (0, express_1.default)();
 exports.app.use(express_1.default.json());
-exports.app.use('/', function (req, res) {
-    res.send('Working').status(200);
+exports.app.get('/', function (req, res) {
+    res.send('Working1').status(200);
 });
 exports.app.use('/videos', VideoRouter_1.VideoRouter);
 //# sourceMappingURL=app.js.map
