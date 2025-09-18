@@ -28,6 +28,6 @@ export const videoRepos = {
     },
 
     deleteVideo : ()=>{
-        VIDEO_DB.video.remove()
+        VIDEO_DB.video.remove();
     }
 }

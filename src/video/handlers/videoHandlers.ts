@@ -23,5 +23,6 @@ export const getVideos = (req: Request, res: Response) => {
 
 export const deleteVideoHandler = (req: Request, res: Response) => {
     const delete = videoRepos.deleteVideo();
+    res.send(204)
 
 }

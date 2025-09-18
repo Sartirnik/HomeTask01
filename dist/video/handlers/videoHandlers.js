@@ -4,7 +4,7 @@ exports.deleteVideoHandler = exports.getVideos = exports.getVideoByIdHandler = e
 var videoRepos_1 = require("../infrastructure/videoRepos");
 var createVideoHandler = function (req, res) {
     // TODO: добавить обработку видео
-    videoRepos_1.videoRepos.createVideo();
+    var create = videoRepos_1.videoRepos.createVideo();
     res.send(200);
 };
 exports.createVideoHandler = createVideoHandler;
@@ -19,9 +19,11 @@ var getVideos = function (req, res) {
 };
 exports.getVideos = getVideos;
 var deleteVideoHandler = function (req, res) {
-    var ;
-    delete ;
-    videoRepos_1.videoRepos.deleteVideo();
+    var deleteVideos = function(req, res) {
+        var delete_video = videoRepos_1.videoRepos.deleteVideo();
+        console.log('delete is successfull');
+        res.send(204);
+    };
 };
 exports.deleteVideoHandler = deleteVideoHandler;
 //# sourceMappingURL=videoHandlers.js.map
