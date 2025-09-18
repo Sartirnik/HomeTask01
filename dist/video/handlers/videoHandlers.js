@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getVideos = exports.getVideoByIdHandler = exports.createVideoHandler = void 0;
+exports.deleteVideoHandler = exports.getVideos = exports.getVideoByIdHandler = exports.createVideoHandler = void 0;
 var videoRepos_1 = require("../infrastructure/videoRepos");
 var createVideoHandler = function (req, res) {
     // TODO: добавить обработку видео
@@ -18,4 +18,10 @@ var getVideos = function (req, res) {
     res.status(200).json(videos);
 };
 exports.getVideos = getVideos;
+var deleteVideoHandler = function (req, res) {
+    var ;
+    delete ;
+    videoRepos_1.videoRepos.deleteVideo();
+};
+exports.deleteVideoHandler = deleteVideoHandler;
 //# sourceMappingURL=videoHandlers.js.map

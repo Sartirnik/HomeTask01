@@ -20,3 +20,8 @@ export const getVideos = (req: Request, res: Response) => {
     console.log(videos);
     res.status(200).json(videos);
 }
+
+export const deleteVideoHandler = (req: Request, res: Response) => {
+    const delete = videoRepos.deleteVideo();
+
+}
