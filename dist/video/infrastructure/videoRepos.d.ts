@@ -1,6 +1,6 @@
 export declare const videoRepos: {
     createVideo: () => void;
-    deleteVideo: () => void;
     getVideos: () => any;
+    deleteVideo: () => void;
 };
 //# sourceMappingURL=videoRepos.d.ts.map
