@@ -8,4 +8,5 @@ function bootstrap() {
 }
 // vercel, Netlify, Render,
 bootstrap();
+//
 //# sourceMappingURL=index.js.map

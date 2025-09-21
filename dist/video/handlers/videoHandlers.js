@@ -37,6 +37,7 @@ var updateVideosHandler = function (req, res) {
         return res.status(404).json(result); // если видео не найдено
     }
     return res.status(200).json(result); // успешное обновление
+    //
 };
 exports.updateVideosHandler = updateVideosHandler;
 //# sourceMappingURL=videoHandlers.js.map
