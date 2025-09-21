@@ -12,4 +12,5 @@ exports.VideoRouter.put('/:id', videoHandlers_1.updateVideosHandler);
 // VideoRouter.post('/', createVideoHandler);      // создать видео
 // VideoRouter.put('/:id', updateVideoHandler);
 // VideoRouter.get('/update',updateVideoHandler);
+//s
 //# sourceMappingURL=VideoRouter.js.map
