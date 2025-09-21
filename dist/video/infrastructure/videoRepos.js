@@ -12,28 +12,55 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.videoRepos = void 0;
+var resolutions_1 = require("../../types/resolutions");
+var HttpStatus_1 = require("../../types/HttpStatus");
 var VIDEO_DB = {
     videos: []
 };
 var UPD_VID_DB = {
     errorsMessage: []
 };
+var ResolutionValidate = function (values) {
+    return Object.values(resolutions_1.Resolutions).includes(values);
+};
 exports.videoRepos = {
-    createVideo: function () {
+    createVideo: function (title, author, availableResolutions) {
+        // провести валлидацию тайтл
+        // валидация автора
+        // валидация resolutiona ЕNUM
+        if (!ResolutionValidate(availableResolutions)) {
+            return res.status(HttpStatus_1.HttpStatus.BadRequest).send(404);
+        }
         var newVideo = {
-            "id": 0,
-            "title": "string",
-            "author": "string",
+            "id": VIDEO_DB.videos.length + 1,
+            "title": title,
+            "author": author,
             "canBeDownloaded": true,
             "minAgeRestriction": null,
             "createdAt": "2025-09-19T21:28:52.571Z",
             "publicationDate": "2025-09-19T21:28:52.571Z",
-            "availableResolutions": [
-                "P144"
-            ]
+            "availableResolutions": availableResolutions
         };
         VIDEO_DB.videos.push(newVideo);
     },
+    // createVideo :  () =>{
+    //     const newVideo =   {
+    //         "id": 0,
+    //         "title": "string",
+    //         "author": "string",
+    //         "canBeDownloaded": true,
+    //         "minAgeRestriction": null,
+    //         "createdAt": "2025-09-19T21:28:52.571Z",
+    //         "publicationDate": "2025-09-19T21:28:52.571Z",
+    //         "availableResolutions": [
+    //             "P144"
+    //         ]
+    //     };
+    //     // VIDEO_DB.videos.push(newVideo);
+    //
+    //
+    //
+    // },
     getVideo: function () {
         return VIDEO_DB.videos;
     },

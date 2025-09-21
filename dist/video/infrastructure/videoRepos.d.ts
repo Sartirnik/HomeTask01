@@ -1,5 +1,5 @@
 export declare const videoRepos: {
-    createVideo: () => void;
+    createVideo(title: any, author: any, availableResolutions: any): any;
     getVideo: () => any;
     getVideoById: (id: number) => any;
     updateVideo: (id: number, data: any) => any;

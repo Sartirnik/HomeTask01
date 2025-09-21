@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express';
+import { Request, Response } from 'express';
 export declare const getVideoByIdHandler: (req: Request, res: Response) => void;
 export declare const createVideoHandler: (req: Request, res: Response) => void;
 export declare const getVideos: (req: Request, res: Response) => void;

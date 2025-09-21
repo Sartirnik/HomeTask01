@@ -1,3 +1,6 @@
+import {Resolutions} from "../../types/resolutions";
+import {HttpStatus} from "../../types/HttpStatus";
+
 const VIDEO_DB : any    = {
     videos: []
 }
@@ -6,23 +9,50 @@ const UPD_VID_DB = {
     errorsMessage:[]
 };
 
+
+const ResolutionValidate= (values: string) : boolean =>{
+    return Object.values(Resolutions).includes(values as Resolutions);
+}
+
 export const videoRepos = {
-    createVideo :  () =>{
+    createVideo(title, author, availableResolutions ){
+        // провести валлидацию тайтл
+        // валидация автора
+        // валидация resolutiona ЕNUM
+        if(!ResolutionValidate(availableResolutions)){
+            return res.status(HttpStatus.BadRequest).send(404)
+        }
         const newVideo =   {
-            "id": 0,
-            "title": "string",
-            "author": "string",
+            "id": VIDEO_DB.videos.length + 1,
+            "title": title,
+            "author": author,
             "canBeDownloaded": true,
             "minAgeRestriction": null,
             "createdAt": "2025-09-19T21:28:52.571Z",
             "publicationDate": "2025-09-19T21:28:52.571Z",
-            "availableResolutions": [
-                "P144"
-            ]
+            "availableResolutions": availableResolutions
         };
-        VIDEO_DB.videos.push(newVideo);
+    VIDEO_DB.videos.push(newVideo);
 
     },
+    // createVideo :  () =>{
+    //     const newVideo =   {
+    //         "id": 0,
+    //         "title": "string",
+    //         "author": "string",
+    //         "canBeDownloaded": true,
+    //         "minAgeRestriction": null,
+    //         "createdAt": "2025-09-19T21:28:52.571Z",
+    //         "publicationDate": "2025-09-19T21:28:52.571Z",
+    //         "availableResolutions": [
+    //             "P144"
+    //         ]
+    //     };
+    //     // VIDEO_DB.videos.push(newVideo);
+    //
+    //
+    //
+    // },
 
     getVideo: () => {
         return VIDEO_DB.videos

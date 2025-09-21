@@ -13,12 +13,7 @@ var getVideoByIdHandler = function (req, res) {
 };
 exports.getVideoByIdHandler = getVideoByIdHandler;
 var createVideoHandler = function (req, res) {
-    //0 поставить постман и денруть из него POST запрос ( на создане видео )
-    //1 достать данные из боди ( протипизровать их )
-    //2 создать видео с этими даннми и вернуть его на фронт
-    //3 смотри пример из урока ( ветка validation )
-    // метод POST ( есть функция для валидации скопируй к себе и переделай под videos )
-    var newVideo = videoRepos_1.videoRepos.createVideo();
+    var newVideo = videoRepos_1.videoRepos.createVideo(req.params.title, req.params.author, req.params.availableResolutions);
     res.status(201).json(newVideo); // 201 Created
 };
 exports.createVideoHandler = createVideoHandler;

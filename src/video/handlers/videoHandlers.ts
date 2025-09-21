@@ -1,6 +1,10 @@
-import type {Request, Response} from 'express'
+import {Request, Response} from 'express'
 
 import {videoRepos} from "../infrastructure/videoRepos";
+import {HttpStatus} from "../../types/HttpStatus";
+import {app} from "../../app";
+
+
 
 export const getVideoByIdHandler = (req: Request, res: Response) => {
     const video = videoRepos.getVideoById(+req.params.id); // нужен метод поиска по id
@@ -12,15 +16,10 @@ export const getVideoByIdHandler = (req: Request, res: Response) => {
 }
 
 export const createVideoHandler = (req: Request, res: Response) => {
-    //0 поставить постман и денруть из него POST запрос ( на создане видео )
-    //1 достать данные из боди ( протипизровать их )
-    //2 создать видео с этими даннми и вернуть его на фронт
 
-
-    //3 смотри пример из урока ( ветка validation )
-    // метод POST ( есть функция для валидации скопируй к себе и переделай под videos )
-    const newVideo = videoRepos.createVideo();
+    const newVideo = videoRepos.createVideo(req.params.title, req.params.author, req.params.availableResolutions);
     res.status(201).json(newVideo); // 201 Created
+
 }
 
 export const getVideos = (req: Request, res: Response) => {

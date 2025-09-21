@@ -11,6 +11,6 @@ exports.app.use(express_1.default.json());
 exports.app.get('/', function (req, res) {
     res.send('working!').status(200);
 });
-// s
+//
 exports.app.use('/videos', VideoRouter_1.VideoRouter);
 //# sourceMappingURL=app.js.map

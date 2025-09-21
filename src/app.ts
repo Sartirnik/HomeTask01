@@ -11,6 +11,6 @@ app.use(express.json());
 app.get('/', (req: Request, res: Response) => {
     res.send('working!').status(200);
 })
-// s
+//
 app.use('/videos', VideoRouter)
 
