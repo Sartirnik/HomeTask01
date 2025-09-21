@@ -1,29 +1,42 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteVideoHandler = exports.getVideos = exports.getVideoByIdHandler = exports.createVideoHandler = void 0;
+exports.updateVideosHandler = exports.getVideos = exports.createVideoHandler = exports.getVideoByIdHandler = void 0;
 var videoRepos_1 = require("../infrastructure/videoRepos");
-var createVideoHandler = function (req, res) {
-    // TODO: добавить обработку видео
-    var create = videoRepos_1.videoRepos.createVideo();
-    res.send(200);
-};
-exports.createVideoHandler = createVideoHandler;
 var getVideoByIdHandler = function (req, res) {
-    // TODO: find video
+    var video = videoRepos_1.videoRepos.getVideoById(+req.params.id); // нужен метод поиска по id
+    if (video) {
+        res.status(200).json(video);
+    }
+    else {
+        res.sendStatus(404);
+    }
 };
 exports.getVideoByIdHandler = getVideoByIdHandler;
+var createVideoHandler = function (req, res) {
+    //0 поставить постман и денруть из него POST запрос ( на создане видео )
+    //1 достать данные из боди ( протипизровать их )
+    //2 создать видео с этими даннми и вернуть его на фронт
+    //3 смотри пример из урока ( ветка validation )
+    // метод POST ( есть функция для валидации скопируй к себе и переделай под videos )
+    var newVideo = videoRepos_1.videoRepos.createVideo();
+    res.status(201).json(newVideo); // 201 Created
+};
+exports.createVideoHandler = createVideoHandler;
 var getVideos = function (req, res) {
-    var videos = videoRepos_1.videoRepos.getVideos();
+    var videos = videoRepos_1.videoRepos.getVideo();
     console.log(videos);
     res.status(200).json(videos);
 };
 exports.getVideos = getVideos;
-var deleteVideoHandler = function (req, res) {
-    var deleteVideos = function(req, res) {
-        var delete_video = videoRepos_1.videoRepos.deleteVideo();
-        console.log('delete is successfull');
-        res.send(204);
-    };
+var updateVideosHandler = function (req, res) {
+    //1 смотри пример из урока ( ветка validation )
+    // метод POST ( есть функция для валидации скопируй к себе и переделай под videos )
+    //2 смотри POST метод и по примеру тут так же делаем
+    var result = videoRepos_1.videoRepos.updateVideo(+req.params.id, req.body);
+    if (result.errorsMessages && result.errorsMessages.length > 0) {
+        return res.status(404).json(result); // если видео не найдено
+    }
+    return res.status(200).json(result); // успешное обновление
 };
-exports.deleteVideoHandler = deleteVideoHandler;
+exports.updateVideosHandler = updateVideosHandler;
 //# sourceMappingURL=videoHandlers.js.map
