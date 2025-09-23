@@ -6,6 +6,7 @@ import {app} from "../../app";
 
 
 
+
 export const getVideoByIdHandler = (req: Request, res: Response) => {
     const video = videoRepos.getVideoById(+req.params.id); // нужен метод поиска по id
     if (video) {
@@ -41,6 +42,7 @@ export const updateVideosHandler = (req: Request, res: Response) => {
 }
 
 export const deleteVideoByIdHandler = (req: Request, res: Response) => {
+    console.log("DELETE handler triggered");
     const id = +req.params.id;
 
     // Проверка: id должен быть числом
