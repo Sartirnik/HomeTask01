@@ -55,24 +55,7 @@ export const videoRepos = {
         return { data: newVideo };
     },
 
-    // createVideo :  () =>{
-    //     const newVideo =   {
-    //         "id": 0,
-    //         "title": "string",
-    //         "author": "string",
-    //         "canBeDownloaded": true,
-    //         "minAgeRestriction": null,
-    //         "createdAt": "2025-09-19T21:28:52.571Z",
-    //         "publicationDate": "2025-09-19T21:28:52.571Z",
-    //         "availableResolutions": [
-    //             "P144"
-    //         ]
-    //     };
-    //     // VIDEO_DB.videos.push(newVideo);
-    //
-    //
-    //
-    // },
+
 
     getVideo: () => {
         return VIDEO_DB.videos
@@ -116,11 +99,5 @@ export const videoRepos = {
     getUpdateVideo :()=>{
 
     }
-    // getVideoMessage : (videoId: number) => {
-    //     return videoRepos.UPD_DB();
-    // }
 
-    // deleteVideo : ()=>{
-    //     VIDEO_DB.video.delete();
-    // },
 }
