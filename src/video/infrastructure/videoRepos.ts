@@ -1,5 +1,6 @@
 import {Resolutions} from "../../types/resolutions";
 import {HttpStatus} from "../../types/HttpStatus";
+import {Response} from "express";
 
 const VIDEO_DB : any    = {
     videos: []
@@ -15,29 +16,32 @@ const ResolutionValidate= (values: string) : boolean =>{
 }
 
 export const videoRepos = {
-    createVideo(title, author, availableResolutions ){
-        // провести валлидацию тайтл
-        // валидация автора
-        // валидация resolutiona ЕNUM
+    createVideo(title: string, author: string, availableResolutions: string) {
+        const errorsMessages = [];
+
+        if (typeof title !== 'string' || title.trim().length < 3 || title.trim().length > 100) {
+            errorsMessages.push({ message: "Invalid title", field: "title" });
+        }
+
         const AuthorValidate = (author: string): boolean => {
             if (typeof author !== 'string') return false;
             const trimmed = author.trim();
             return trimmed.length >= 3 && trimmed.length <= 50;
-        }
-
-        if (typeof title !== 'string' || title.trim().length < 3 || title.trim().length > 100) {
-            return res.status(HttpStatus.BadRequest).send(404);
-        }
+        };
 
         if (!AuthorValidate(author)) {
-            return res.status(HttpStatus.BadRequest).send(404);
+            errorsMessages.push({ message: "Invalid author", field: "author" });
         }
 
-        if(!ResolutionValidate(availableResolutions)){
-            return res.status(HttpStatus.BadRequest).send(404);
+        if (!ResolutionValidate(availableResolutions)) {
+            errorsMessages.push({ message: "Invalid resolution", field: "availableResolutions" });
         }
-        const newVideo =   {
-            "id": VIDEO_DB.videos.length + 1,
+
+        if (errorsMessages.length > 0) {
+            return { errorsMessages };
+        }
+
+        const newVideo = {
             "title": title,
             "author": author,
             "canBeDownloaded": true,
@@ -46,9 +50,11 @@ export const videoRepos = {
             "publicationDate": "2025-09-19T21:28:52.571Z",
             "availableResolutions": availableResolutions
         };
-    VIDEO_DB.videos.push(newVideo);
 
+        VIDEO_DB.videos.push(newVideo);
+        return { data: newVideo };
     },
+
     // createVideo :  () =>{
     //     const newVideo =   {
     //         "id": 0,

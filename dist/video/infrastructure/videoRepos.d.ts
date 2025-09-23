@@ -1,8 +1,22 @@
 export declare const videoRepos: {
-    createVideo(title: any, author: any, availableResolutions: any): any;
+    createVideo(title: string, author: string, availableResolutions: string): {
+        errorsMessages: any[];
+        data?: undefined;
+    } | {
+        data: {
+            title: string;
+            author: string;
+            canBeDownloaded: boolean;
+            minAgeRestriction: any;
+            createdAt: string;
+            publicationDate: string;
+            availableResolutions: string;
+        };
+        errorsMessages?: undefined;
+    };
     getVideo: () => any;
     getVideoById: (id: number) => any;
-    updateVideo: (id: number, data: any) => any;
+    updateVideos: (id: number, data: any) => any;
     deleteVideo: (id: number) => boolean;
     getUpdateVideo: () => void;
 };

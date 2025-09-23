@@ -13,7 +13,6 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.videoRepos = void 0;
 var resolutions_1 = require("../../types/resolutions");
-var HttpStatus_1 = require("../../types/HttpStatus");
 var VIDEO_DB = {
     videos: []
 };
@@ -25,14 +24,26 @@ var ResolutionValidate = function (values) {
 };
 exports.videoRepos = {
     createVideo: function (title, author, availableResolutions) {
-        // провести валлидацию тайтл
-        // валидация автора
-        // валидация resolutiona ЕNUM
+        var errorsMessages = [];
+        if (typeof title !== 'string' || title.trim().length < 3 || title.trim().length > 100) {
+            errorsMessages.push({ message: "Invalid title", field: "title" });
+        }
+        var AuthorValidate = function (author) {
+            if (typeof author !== 'string')
+                return false;
+            var trimmed = author.trim();
+            return trimmed.length >= 3 && trimmed.length <= 50;
+        };
+        if (!AuthorValidate(author)) {
+            errorsMessages.push({ message: "Invalid author", field: "author" });
+        }
         if (!ResolutionValidate(availableResolutions)) {
-            return res.status(HttpStatus_1.HttpStatus.BadRequest).send(404);
+            errorsMessages.push({ message: "Invalid resolution", field: "availableResolutions" });
+        }
+        if (errorsMessages.length > 0) {
+            return { errorsMessages: errorsMessages };
         }
         var newVideo = {
-            "id": VIDEO_DB.videos.length + 1,
             "title": title,
             "author": author,
             "canBeDownloaded": true,
@@ -42,6 +53,7 @@ exports.videoRepos = {
             "availableResolutions": availableResolutions
         };
         VIDEO_DB.videos.push(newVideo);
+        return { data: newVideo };
     },
     // createVideo :  () =>{
     //     const newVideo =   {
@@ -67,13 +79,11 @@ exports.videoRepos = {
     getVideoById: function (id) {
         return VIDEO_DB.videos.find(function (v) { return v.id === id; }) || null;
     },
-    updateVideo: function (id, data) {
+    updateVideos: function (id, data) {
         var video = VIDEO_DB.videos.find(function (v) { return v.id === id; });
         if (!video) {
             //ЕСЛИ ВИДЕО НЕТ возвращаем null => и в хендлере if(video === null) res.status(404).send(...)
-            return {
-                errorsMessages: [{ message: "Video not found", field: "id" }]
-            };
+            return null;
         }
         // Обновляем только допустимые поля
         if (data.title)
@@ -86,7 +96,7 @@ exports.videoRepos = {
         var index = VIDEO_DB.videos.findIndex(function (v) { return v.id === id; });
         if (index === -1)
             return false;
-        VIDEO_DB.videos.splice(index, 1);
+        VIDEO_DB.videos.splice(index, 0);
         return true;
     },
     getUpdateVideo: function () {
