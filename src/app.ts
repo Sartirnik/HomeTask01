@@ -9,7 +9,7 @@ export const app = express();
 app.use(express.json());
 
 app.get('/', (req: Request, res: Response) => {
-    res.send('working2').status(200);
+    res.send('working3').status(200);
 })
 //
 app.use('/videos', VideoRouter)
