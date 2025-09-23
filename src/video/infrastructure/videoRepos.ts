@@ -83,9 +83,8 @@ export const videoRepos = {
 
         if (!video) {
             //ЕСЛИ ВИДЕО НЕТ возвращаем null => и в хендлере if(video === null) res.status(404).send(...)
-            return {
-                errorsMessages: [{ message: "Video not found", field: "id" }]
-            };
+
+            return null;
         }
 
         // Обновляем только допустимые поля
@@ -102,7 +101,7 @@ export const videoRepos = {
     deleteVideo: (id: number) => {
         const index = VIDEO_DB.videos.findIndex(v => v.id === id);
         if (index === -1) return false;
-        VIDEO_DB.videos.splice(index, 1);
+        VIDEO_DB.videos.splice(index, 0);
         return true;
     },
 
