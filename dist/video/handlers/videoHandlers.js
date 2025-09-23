@@ -36,6 +36,7 @@ var updateVideosHandler = function (req, res) {
 };
 exports.updateVideosHandler = updateVideosHandler;
 var deleteVideoByIdHandler = function (req, res) {
+    console.log("DELETE handler triggered");
     var id = +req.params.id;
     // Проверка: id должен быть числом
     if (isNaN(id)) {
