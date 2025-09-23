@@ -49,30 +49,22 @@ export const updateVideosHandler = (req: Request, res: Response) => {
     const id = +req.params.id;
 
     if (isNaN(id)) {
-        return res.status(HttpStatus.BadRequest).json({
+        return res.status(400).json({
             errorsMessages: [{ message: "Invalid ID format", field: "id" }]
         });
     }
 
-    if (!req.body || Object.keys(req.body).length === 0) {
-        return res.status(HttpStatus.BadRequest).json({
-            errorsMessages: [{ message: "No data provided", field: "body" }]
+    const result = videoRepos.updateVideos(id, req.body); // исправлено имя
+
+    if (!result || (result.errorsMessages && result.errorsMessages.length > 0)) {
+        return res.status(404).json({
+            errorsMessages: [{ message: "Video not found", field: "id" }]
         });
     }
 
-    const validationErrors = validateVideoData(req.body);
-    if (validationErrors.length > 0) {
-        return res.status(HttpStatus.BadRequest).json({ errorsMessages: validationErrors });
-    }
-
-    const result = videoRepos.updateVideos(id, req.body);
-
-    if (result.errorsMessages && result.errorsMessages.length > 0) {
-        return res.status(HttpStatus.NotFound).json(result);
-    }
-
-    return res.status(HttpStatus.OK).json(result);
+    return res.status(200).json(result);
 };
+
 
 
 
