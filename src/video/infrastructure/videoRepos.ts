@@ -78,7 +78,7 @@ export const videoRepos = {
     },
 
 
-    updateVideo: (id: number, data: any) => {
+    updateVideos: (id: number, data: any) => {
         const video = VIDEO_DB.videos.find(v => v.id === id);
 
         if (!video) {

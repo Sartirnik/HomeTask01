@@ -34,7 +34,7 @@ export const updateVideosHandler = (req: Request, res: Response) => {
     //2 смотри POST метод и по примеру тут так же делаем
 
 
-    const result = videoRepos.updateVideo(+req.params.id, req.body);
+    const result = videoRepos.updateVideos(+req.params.id, req.body);
 
     if (result.errorsMessages && result.errorsMessages.length > 0) {
         return res.status(404).json(result); // если видео не найдено
