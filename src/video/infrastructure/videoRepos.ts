@@ -19,8 +19,22 @@ export const videoRepos = {
         // провести валлидацию тайтл
         // валидация автора
         // валидация resolutiona ЕNUM
+        const AuthorValidate = (author: string): boolean => {
+            if (typeof author !== 'string') return false;
+            const trimmed = author.trim();
+            return trimmed.length >= 3 && trimmed.length <= 50;
+        }
+
+        if (typeof title !== 'string' || title.trim().length < 3 || title.trim().length > 100) {
+            return res.status(HttpStatus.BadRequest).send(404);
+        }
+
+        if (!AuthorValidate(author)) {
+            return res.status(HttpStatus.BadRequest).send(404);
+        }
+
         if(!ResolutionValidate(availableResolutions)){
-            return res.status(HttpStatus.BadRequest).send(404)
+            return res.status(HttpStatus.BadRequest).send(404);
         }
         const newVideo =   {
             "id": VIDEO_DB.videos.length + 1,
