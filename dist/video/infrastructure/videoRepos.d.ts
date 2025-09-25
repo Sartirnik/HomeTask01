@@ -1,23 +1,21 @@
+export declare const VIDEO_DB: any;
 export declare const videoRepos: {
-    createVideo(title: string, author: string, availableResolutions: string): {
-        errorsMessages: any[];
-        data?: undefined;
+    clearAll(): void;
+    createVideo(title: string, author: string, availableResolutions: string[]): {
+        id: number;
+        title: string;
+        author: string;
+        canBeDownloaded: boolean;
+        minAgeRestriction: any;
+        createdAt: string;
+        publicationDate: string;
+        availableResolutions: string[];
     } | {
-        data: {
-            title: string;
-            author: string;
-            canBeDownloaded: boolean;
-            minAgeRestriction: any;
-            createdAt: string;
-            publicationDate: string;
-            availableResolutions: string;
-        };
-        errorsMessages?: undefined;
+        errorsMessages: any[];
     };
     getVideo: () => any;
     getVideoById: (id: number) => any;
     updateVideos: (id: number, data: any) => any;
     deleteVideo: (id: number) => boolean;
-    getUpdateVideo: () => void;
 };
 //# sourceMappingURL=videoRepos.d.ts.map

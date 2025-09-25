@@ -1,42 +1,34 @@
 import {Resolutions} from "../../types/resolutions";
-import {HttpStatus} from "../../types/HttpStatus";
-import {Response} from "express";
 
-
-
-export const VIDEO_DB : any    = {
+export const VIDEO_DB: any = {
     videos: []
 };
 
-const UPD_VID_DB = {
-    errorsMessage:[]
+let nextId = 1;
+
+const ResolutionValidate = (value: string): boolean => {
+    return Object.values(Resolutions).includes(value as Resolutions);
 };
-
-
-const ResolutionValidate= (values: string) : boolean =>{
-    return Object.values(Resolutions).includes(values as Resolutions);
-}
 
 export const videoRepos = {
     clearAll() {
         VIDEO_DB.videos = [];
+        nextId = 1;
     },
+
     createVideo(title: string, author: string, availableResolutions: string[]) {
-        const errorsMessages = [];
-        if (typeof title !== 'string' || title.trim().length < 3 || title.trim().length > 100) {
+        const errorsMessages: any[] = [];
+
+        if (typeof title !== 'string' || title.trim().length < 1 || title.trim().length > 40) {
             errorsMessages.push({ message: "Invalid title", field: "title" });
         }
 
-        const AuthorValidate = (author: string): boolean => {
-            if (typeof author !== 'string') return false;
-            const trimmed = author.trim();
-            return trimmed.length >= 3 && trimmed.length <= 50;
-        };
-
-        if (!AuthorValidate(author)) {
+        // Валидация author
+        if (typeof author !== 'string' || author.trim().length < 1 || author.trim().length > 20) {
             errorsMessages.push({ message: "Invalid author", field: "author" });
         }
 
+        // Валидация availableResolutions
         if (!Array.isArray(availableResolutions)) {
             errorsMessages.push({ message: "availableResolutions must be an array", field: "availableResolutions" });
         } else {
@@ -46,52 +38,53 @@ export const videoRepos = {
             }
         }
 
-
         if (errorsMessages.length > 0) {
             return { errorsMessages };
         }
 
         const newVideo = {
-            title,
-            author,
-            "canBeDownloaded": true,
-            "minAgeRestriction": null,
+            id: nextId++,
+            title: title.trim(),
+            author: author.trim(),
+            canBeDownloaded: false,
+            minAgeRestriction: null,
             createdAt: new Date().toISOString(),
-            publicationDate: new Date(Date.now() + 24*60*60*1000).toISOString(), // завтра
-            'availableResolutions': availableResolutions
+            publicationDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+            availableResolutions
         };
 
         VIDEO_DB.videos.push(newVideo);
-        return { data: newVideo };
+        return newVideo;
     },
 
-
-
-    getVideo: () => {
-        return VIDEO_DB.videos
-    },
-
+    getVideo: () => VIDEO_DB.videos,
 
     getVideoById: (id: number) => {
         return VIDEO_DB.videos.find(v => v.id === id) || null;
     },
 
-
     updateVideos: (id: number, data: any) => {
         const video = VIDEO_DB.videos.find(v => v.id === id);
         if (!video) return null;
 
-        const errorsMessages = [];
+        const errorsMessages: any[] = [];
 
-        if (data.title && (typeof data.title !== 'string' || data.title.trim().length < 3 || data.title.trim().length > 100)) {
-            errorsMessages.push({ message: "Invalid title", field: "title" });
+        // title
+        if (data.title !== undefined) {
+            if (typeof data.title !== 'string' || data.title.trim().length < 1 || data.title.trim().length > 40) {
+                errorsMessages.push({ message: "Invalid title", field: "title" });
+            }
         }
 
-        if (data.author && (typeof data.author !== 'string' || data.author.trim().length < 3 || data.author.trim().length > 50)) {
-            errorsMessages.push({ message: "Invalid author", field: "author" });
+        // author
+        if (data.author !== undefined) {
+            if (typeof data.author !== 'string' || data.author.trim().length < 1 || data.author.trim().length > 20) {
+                errorsMessages.push({ message: "Invalid author", field: "author" });
+            }
         }
 
-        if (data.availableResolutions) {
+        // availableResolutions
+        if (data.availableResolutions !== undefined) {
             if (!Array.isArray(data.availableResolutions)) {
                 errorsMessages.push({ message: "availableResolutions must be an array", field: "availableResolutions" });
             } else {
@@ -102,14 +95,41 @@ export const videoRepos = {
             }
         }
 
+        // canBeDownloaded
+        if (data.canBeDownloaded !== undefined) {
+            if (typeof data.canBeDownloaded !== 'boolean') {
+                errorsMessages.push({ message: "Invalid canBeDownloaded", field: "canBeDownloaded" });
+            }
+        }
+
+        // minAgeRestriction
+        if (data.minAgeRestriction !== undefined) {
+            if (data.minAgeRestriction !== null) {
+                if (typeof data.minAgeRestriction !== 'number' || data.minAgeRestriction < 1 || data.minAgeRestriction > 18) {
+                    errorsMessages.push({ message: "Invalid minAgeRestriction", field: "minAgeRestriction" });
+                }
+            }
+        }
+
+        // publicationDate
+        if (data.publicationDate !== undefined) {
+            if (typeof data.publicationDate !== 'string' || isNaN(Date.parse(data.publicationDate))) {
+                errorsMessages.push({ message: "Invalid publicationDate", field: "publicationDate" });
+            }
+        }
+
         if (errorsMessages.length > 0) {
             return { errorsMessages };
         }
 
         // Обновляем только допустимые поля
-        if (data.title) video.title = data.title;
-        if (data.author) video.author = data.author;
-        if (data.availableResolutions) video.availableResolutions = data.availableResolutions;
+        if (data.title !== undefined) video.title = data.title.trim();
+        if (data.author !== undefined) video.author = data.author.trim();
+        if (data.availableResolutions !== undefined) video.availableResolutions = data.availableResolutions;
+        if (data.canBeDownloaded !== undefined) video.canBeDownloaded = data.canBeDownloaded;
+        if (data.minAgeRestriction !== undefined) video.minAgeRestriction = data.minAgeRestriction;
+        if (data.publicationDate !== undefined) video.publicationDate = data.publicationDate;
+
         return video;
     },
 
@@ -119,12 +139,5 @@ export const videoRepos = {
         if (index === -1) return false;
         VIDEO_DB.videos.splice(index, 1);
         return true;
-    },
-
-
-
-    getUpdateVideo :()=>{
-
     }
-
-}
+};

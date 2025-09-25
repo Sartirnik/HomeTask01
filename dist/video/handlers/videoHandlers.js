@@ -4,55 +4,48 @@ exports.deleteVideoByIdHandler = exports.updateVideosHandler = exports.getVideos
 var videoRepos_1 = require("../infrastructure/videoRepos");
 var HttpStatus_1 = require("../../types/HttpStatus");
 var getVideoByIdHandler = function (req, res) {
-    var video = videoRepos_1.videoRepos.getVideoById(+req.params.id); // нужен метод поиска по id
+    var video = videoRepos_1.videoRepos.getVideoById(+req.params.id);
     if (video) {
-        res.status(200).json(video);
+        res.status(HttpStatus_1.HttpStatus.OK).json(video);
     }
     else {
-        res.sendStatus(404);
+        res.sendStatus(HttpStatus_1.HttpStatus.NOT_FOUND);
     }
 };
 exports.getVideoByIdHandler = getVideoByIdHandler;
 var createVideoHandler = function (req, res) {
-    var newVideo = videoRepos_1.videoRepos.createVideo(req.params.title, req.params.author, req.params.availableResolutions);
-    res.status(201).json(newVideo); // 201 Created
+    var _a = req.body, title = _a.title, author = _a.author, availableResolutions = _a.availableResolutions;
+    var result = videoRepos_1.videoRepos.createVideo(title, author, availableResolutions);
+    if (result && 'errorsMessages' in result) {
+        return res.status(HttpStatus_1.HttpStatus.BAD_REQUEST).json(result);
+    }
+    res.status(HttpStatus_1.HttpStatus.CREATED).json(result);
 };
 exports.createVideoHandler = createVideoHandler;
 var getVideos = function (req, res) {
     var videos = videoRepos_1.videoRepos.getVideo();
-    console.log(videos);
-    res.status(200).json(videos);
+    res.status(HttpStatus_1.HttpStatus.OK).json(videos);
 };
 exports.getVideos = getVideos;
 var updateVideosHandler = function (req, res) {
-    //1 смотри пример из урока ( ветка validation )
-    // метод POST ( есть функция для валидации скопируй к себе и переделай под videos )
-    //2 смотри POST метод и по примеру тут так же делаем
     var result = videoRepos_1.videoRepos.updateVideos(+req.params.id, req.body);
-    if (result.errorsMessages && result.errorsMessages.length > 0 || result === null) {
-        return res.status(404).json(result); // если видео не найдено
+    if (result === null) {
+        return res.sendStatus(HttpStatus_1.HttpStatus.NOT_FOUND);
     }
-    return res.status(200).json(result); // успешное обновление
+    if (result && 'errorsMessages' in result) {
+        return res.status(HttpStatus_1.HttpStatus.BAD_REQUEST).json(result);
+    }
+    // успешное обновление
+    return res.sendStatus(HttpStatus_1.HttpStatus.NO_CONTENT);
 };
 exports.updateVideosHandler = updateVideosHandler;
 var deleteVideoByIdHandler = function (req, res) {
-    console.log("DELETE handler triggered");
     var id = +req.params.id;
-    // Проверка: id должен быть числом
-    if (isNaN(id)) {
-        return res.status(HttpStatus_1.HttpStatus.BadRequest).json({
-            errorsMessages: [{ message: "Invalid ID format", field: "id" }]
-        });
-    }
     var isDeleted = videoRepos_1.videoRepos.deleteVideo(id);
-    // Если видео не найдено
     if (!isDeleted) {
-        return res.status(HttpStatus_1.HttpStatus.NotFound).json({
-            errorsMessages: [{ message: "Video not found", field: "id" }]
-        });
+        return res.sendStatus(HttpStatus_1.HttpStatus.NOT_FOUND);
     }
-    // Успешное удаление
-    return res.sendStatus(HttpStatus_1.HttpStatus.NoContent); // 204 — без тела
+    return res.sendStatus(HttpStatus_1.HttpStatus.NO_CONTENT);
 };
 exports.deleteVideoByIdHandler = deleteVideoByIdHandler;
 //# sourceMappingURL=videoHandlers.js.map
