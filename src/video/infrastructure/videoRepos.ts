@@ -2,9 +2,11 @@ import {Resolutions} from "../../types/resolutions";
 import {HttpStatus} from "../../types/HttpStatus";
 import {Response} from "express";
 
-const VIDEO_DB : any    = {
+
+
+export const VIDEO_DB : any    = {
     videos: []
-}
+};
 
 const UPD_VID_DB = {
     errorsMessage:[]
@@ -16,9 +18,11 @@ const ResolutionValidate= (values: string) : boolean =>{
 }
 
 export const videoRepos = {
-    createVideo(title: string, author: string, availableResolutions: string) {
+    clearAll() {
+        VIDEO_DB.videos = [];
+    },
+    createVideo(title: string, author: string, availableResolutions: string[]) {
         const errorsMessages = [];
-
         if (typeof title !== 'string' || title.trim().length < 3 || title.trim().length > 100) {
             errorsMessages.push({ message: "Invalid title", field: "title" });
         }
@@ -33,22 +37,28 @@ export const videoRepos = {
             errorsMessages.push({ message: "Invalid author", field: "author" });
         }
 
-        if (!ResolutionValidate(availableResolutions)) {
-            errorsMessages.push({ message: "Invalid resolution", field: "availableResolutions" });
+        if (!Array.isArray(availableResolutions)) {
+            errorsMessages.push({ message: "availableResolutions must be an array", field: "availableResolutions" });
+        } else {
+            const invalid = availableResolutions.filter(r => !ResolutionValidate(r));
+            if (invalid.length > 0) {
+                errorsMessages.push({ message: "Invalid resolution(s)", field: "availableResolutions" });
+            }
         }
+
 
         if (errorsMessages.length > 0) {
             return { errorsMessages };
         }
 
         const newVideo = {
-            "title": title,
-            "author": author,
+            title,
+            author,
             "canBeDownloaded": true,
             "minAgeRestriction": null,
-            "createdAt": "2025-09-19T21:28:52.571Z",
-            "publicationDate": "2025-09-19T21:28:52.571Z",
-            "availableResolutions": availableResolutions
+            createdAt: new Date().toISOString(),
+            publicationDate: new Date(Date.now() + 24*60*60*1000).toISOString(), // завтра
+            'availableResolutions': availableResolutions
         };
 
         VIDEO_DB.videos.push(newVideo);
@@ -69,28 +79,45 @@ export const videoRepos = {
 
     updateVideos: (id: number, data: any) => {
         const video = VIDEO_DB.videos.find(v => v.id === id);
+        if (!video) return null;
 
-        if (!video) {
-            //ЕСЛИ ВИДЕО НЕТ возвращаем null => и в хендлере if(video === null) res.status(404).send(...)
+        const errorsMessages = [];
 
-            return null;
+        if (data.title && (typeof data.title !== 'string' || data.title.trim().length < 3 || data.title.trim().length > 100)) {
+            errorsMessages.push({ message: "Invalid title", field: "title" });
+        }
+
+        if (data.author && (typeof data.author !== 'string' || data.author.trim().length < 3 || data.author.trim().length > 50)) {
+            errorsMessages.push({ message: "Invalid author", field: "author" });
+        }
+
+        if (data.availableResolutions) {
+            if (!Array.isArray(data.availableResolutions)) {
+                errorsMessages.push({ message: "availableResolutions must be an array", field: "availableResolutions" });
+            } else {
+                const invalid = data.availableResolutions.filter((r: string) => !ResolutionValidate(r));
+                if (invalid.length > 0) {
+                    errorsMessages.push({ message: "Invalid resolution(s)", field: "availableResolutions" });
+                }
+            }
+        }
+
+        if (errorsMessages.length > 0) {
+            return { errorsMessages };
         }
 
         // Обновляем только допустимые поля
         if (data.title) video.title = data.title;
         if (data.author) video.author = data.author;
-
-        return {
-            ...video,
-            errorsMessages: []
-        };
+        if (data.availableResolutions) video.availableResolutions = data.availableResolutions;
+        return video;
     },
 
 
     deleteVideo: (id: number) => {
         const index = VIDEO_DB.videos.findIndex(v => v.id === id);
         if (index === -1) return false;
-        VIDEO_DB.videos.splice(index, 0);
+        VIDEO_DB.videos.splice(index, 1);
         return true;
     },
 
